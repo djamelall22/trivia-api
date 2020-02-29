@@ -29,8 +29,7 @@ def create_app(test_config=None):
   @app.route('/categories', methods=['GET'])
   def get_all_categories():
       """
-      Creates a dictionary of all categories
-      :return: All categories
+      get categories from DB
       """
       categories = {}
       for category in Category.query.all():
@@ -39,6 +38,26 @@ def create_app(test_config=None):
           'categories': categories
       })
 
+
+
+  @app.route('/questions', methods=['GET'])
+  def get_questions():
+      """
+      Get questions, categories and num of total questions from DB
+      """
+      categories = {}
+      for category in Category.query.all():
+          categories[category.id] = category.type
+      questions = [question.format() for question in Question.query.all()]
+      page = int(request.args.get('page', '0'))
+      upper_limit = page * 10
+      lower_limit = upper_limit - 10
+      return jsonify({
+          'questions': questions[
+                       lower_limit:upper_limit] if page else questions,
+          'total_questions': len(questions),
+          'categories': categories
+      })
 
   return app
 
