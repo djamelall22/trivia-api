@@ -95,7 +95,7 @@ def create_app(test_config=None):
   @app.route('/search', methods=['POST'])
   def search():
       """
-      Search questions using the search term
+      Search questions using a search term
       """
       search_term = request.json.get('searchTerm', '')
       questions = [question.format() for question in Question.query.all() if
@@ -105,6 +105,20 @@ def create_app(test_config=None):
           'total_questions': len(questions)
 
 
+  @app.route('/categories/<int:category_id>/questions', methods=['GET'])
+  def get_questions_by_category(category_id):
+      """
+      Get questions from BD and filter the question based on a category
+      """
+      if not category_id:
+          return abort(400, 'category id not Inval')
+      questions = [question.format() for question in
+                    Question.query.filter(Question.category == category_id)]
+      return jsonify({
+          'questions': questions,
+          'total_questions': len(questions),
+          'current_category': category_id
+      })
 
 
   return app
