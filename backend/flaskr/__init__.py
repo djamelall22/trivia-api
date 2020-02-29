@@ -59,6 +59,44 @@ def create_app(test_config=None):
           'categories': categories
       })
 
+  @app.route('/questions/<int:question_id>', methods=['DELETE'])
+  def delete_question(question_id):
+      """
+      Delete a question by the question id
+      """
+      question = Question.query.get(question_id)
+      if not question:
+          return abort(404, f'question with this id not found: {question_id}')
+      question.delete()
+      return jsonify({
+          'deleted': question_id
+      })
+
+
+  @app.route('/questions', methods=['POST'])
+  def post_question():
+      """
+      Adds a question to DB
+      """
+      question = request.json.get('question')
+      answer = request.json.get('answer')
+      category = request.json.get('category')
+      difficulty = request.json.get('difficulty')
+      if not (question and answer and category and difficulty):
+          return abort(400,
+                        'question object keys missing from the request '
+                        'body')
+      question_entry = Question(question, answer, category, difficulty)
+      question_entry.insert()
+      return jsonify({
+          'question': question_entry.format()
+      })
+
+
+
+
+
+
   return app
 
 
