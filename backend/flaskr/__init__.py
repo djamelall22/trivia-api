@@ -103,7 +103,7 @@ def create_app(test_config=None):
       return jsonify({
           'questions': questions,
           'total_questions': len(questions)
-
+      })
 
   @app.route('/categories/<int:category_id>/questions', methods=['GET'])
   def get_questions_by_category(category_id):
@@ -120,6 +120,26 @@ def create_app(test_config=None):
           'current_category': category_id
       })
 
+  @app.route('/quizzes', methods=['POST'])
+  def get_quiz_questions():
+      """
+      Get question for quiz
+      """
+      previous_questions = request.json.get('previous_questions')
+      quiz_category = request.json.get('quiz_category')
+      if not quiz_category:
+          return abort(400, 'Required keys missing from request body')
+      category_id = int(quiz_category.get('id'))
+      questions = Question.query.filter(
+          Question.category == category_id,
+          ~Question.id.in_(previous_questions)) if category_id else \
+          Question.query.filter(~Question.id.in_(previous_questions))
+      question = questions.order_by(func.random()).first()
+      if not question:
+          return jsonify({})
+      return jsonify({
+          'question': question.format()
+      })
 
   return app
 
