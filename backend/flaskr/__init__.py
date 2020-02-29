@@ -92,7 +92,17 @@ def create_app(test_config=None):
           'question': question_entry.format()
       })
 
-
+  @app.route('/search', methods=['POST'])
+  def search():
+      """
+      Search questions using the search term
+      """
+      search_term = request.json.get('searchTerm', '')
+      questions = [question.format() for question in Question.query.all() if
+                  re.search(search_term, question.question, re.IGNORECASE)]
+      return jsonify({
+          'questions': questions,
+          'total_questions': len(questions)
 
 
 
