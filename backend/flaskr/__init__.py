@@ -141,6 +141,29 @@ def create_app(test_config=None):
           'question': question.format()
       })
 
+  @app.errorhandler(HTTPException)
+  def http_exception_handler(error):
+      """
+      HTTP error handler for all endpoints
+      """
+      return jsonify({
+          'success': False,
+          'error': error.code,
+          'message': error.description
+      }), error.code
+
+
+  @app.errorhandler(Exception)
+  def exception_handler(error):
+      """
+      serveur ERROR      """
+      return jsonify({
+          'success': False,
+          'error': 500,
+          'message': f'Something went wrong: {error}'
+      }), 500
+
+
   return app
 
 
