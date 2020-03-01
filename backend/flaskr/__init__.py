@@ -156,7 +156,8 @@ def create_app(test_config=None):
   @app.errorhandler(Exception)
   def exception_handler(error):
       """
-      serveur ERROR      """
+      serveur ERROR 
+      """
       return jsonify({
           'success': False,
           'error': 500,
