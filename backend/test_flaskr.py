@@ -56,10 +56,10 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_post_question(self):
         sample_question = {
-            'question': 'Who invented the personal computer?',
-            'answer': 'Steve Wozniak',
-            'category': 4,
-            'difficulty': 2
+            'question': 'Who won the 1998 football world cup?',
+            'answer': 'France',
+            'category': 1,
+            'difficulty': 3
         }
         res = self.client().post('/questions',
                                  data=json.dumps(sample_question),
@@ -76,6 +76,17 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIsInstance(data['questions'], list)
         self.assertIsInstance(data['total_questions'], int)
+
+    def test_get_questions_by_category(self):
+        category_id = 1
+        res = self.client().get(f'/categories/{category_id}/questions')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertIsInstance(data['questions'], list)
+        self.assertIsInstance(data['total_questions'], int)
+        self.assertEqual(data['current_category'], category_id)
+        for question in data['questions']:
+            self.assertEqual(question['category'], category_id)
 
 
 # Make the tests conveniently executable
