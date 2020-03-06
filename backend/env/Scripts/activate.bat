@@ -1,6 +1,6 @@
 @echo off
 
-set "VIRTUAL_ENV=C:\Users\djamel\Desktop\02_trivia_api\starter\backend\env"
+set "VIRTUAL_ENV=C:\Users\nounou\Desktop\trivia-api\backend\env"
 
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"

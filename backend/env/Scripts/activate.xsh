@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"C:\Users\djamel\Desktop\02_trivia_api\starter\backend\env"
+$VIRTUAL_ENV = r"C:\Users\nounou\Desktop\trivia-api\backend\env"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]

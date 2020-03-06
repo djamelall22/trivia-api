@@ -15,7 +15,7 @@ class TriviaTestCase(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client
         self.database_name = "trivia_test"
-        self.database_path = "postgres://{}/{}".format(
+        self.database_path = "postgres://postgres:aaaa@{}/{}".format(
             'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
@@ -23,7 +23,6 @@ class TriviaTestCase(unittest.TestCase):
         with self.app.app_context():
             self.db = SQLAlchemy()
             self.db.init_app(self.app)
-            # create all tables
             self.db.create_all()
 
     def tearDown(self):
