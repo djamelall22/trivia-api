@@ -4,7 +4,7 @@
 
 ### Installing Dependencies
 
-#### Python 3.7
+#### Python 3.8
 
 Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
@@ -24,14 +24,16 @@ This will install all of the required packages we selected within the `requireme
 
 ##### Key Dependencies
 
-- [Flask](http://flask.pocoo.org/)  is a lightweight backend microservices framework. Flask is required to handle requests and responses.
+- [Flask](http://flask.pocoo.org/) is a lightweight backend microservices framework. Flask is required to handle requests and responses.
 
-- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py. 
+- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py.
 
-- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server. 
+- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server.
 
 ## Database Setup
+
 With Postgres running, restore a database using the trivia.psql file provided. From the backend folder in terminal run:
+
 ```bash
 psql trivia < trivia.psql
 ```
@@ -50,51 +52,171 @@ flask run
 
 Setting the `FLASK_ENV` variable to `development` will detect file changes and restart the server automatically.
 
-Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
-
-## Tasks
-
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
-
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-3. Create an endpoint to handle GET requests for all available categories. 
-4. Create an endpoint to DELETE question using a question ID. 
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-6. Create a POST endpoint to get questions based on category. 
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
-```
-
+Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application.
 
 ## Testing
-To run the tests, run
+
+To run flask tests.
+
+```bash
+python -m unittest discover -s . -p 'test_*.py'
 ```
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
+
+## API Documentation
+
+- GET "/categories"
+  - Get a dictionary of categories.
+  - Request Parameters: None
+  - Response Body:
+
+```json
+{
+  "categories": {
+    "1": "Science",
+    "2": "Art"
+  }
+}
+```
+
+- GET "/questions?page=1"
+
+  - GEt the questions to be displayed on the page using page number.
+  - Request Parameters: `page`: Page number
+  - Response Body:
+
+  `questions`: List of questions
+
+  `categories`: Dictionary of _Category ID_ <-> _Category Type_
+
+  `total_questions`: Total number of questions
+
+```json
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "",
+      "answer": "",
+      "category": 1,
+      "difficulty": 1
+    }
+  ],
+  "categories": {
+    "1": "Science",
+    "2": "Art"
+  },
+  "total_questions": 1
+}
+```
+
+- DELETE "/questions/<int:question_id>"
+
+  - Deletes a question from the database
+  - Request Parameters: `question_id`: Question ID to delete
+  - Response Body:
+
+  `deleted`: Question ID that is deleted
+
+```json
+{
+  "deleted": 20
+}
+```
+
+- POST "/questions"
+  - Create a new questions.
+  - Request Body:
+    `question`: Question statement
+    `answer`: Answer statement
+    `category`: Category ID
+    `difficulty`: Difficulty Level
+  - Response Body:
+    `question`: Question object that is created
+
+```json
+{
+  "question": {
+    "id": 1,
+    "question": "",
+    "answer": "",
+    "category": 1,
+    "difficulty": 1
+  }
+}
+```
+
+- POST "/search"
+  - Get questions based on the search term
+  - Request Body:
+    `searchTerm`: Search term
+  - Response Body:
+    `questions`: List of questions found in search
+    `total_questions`: Total number of questions
+
+```json
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "",
+      "answer": "",
+      "category": 1,
+      "difficulty": 1
+    }
+  ],
+  "total_questions": 1
+}
+```
+
+- GET "/categories/<int:category_id>/questions"
+
+  - GEt questions for the requested category
+  - Request Parameters: `category_id`: Category ID for questions
+  - Response Body:
+
+  `questions`: List of category questions
+
+  `total_questions`: Total number of questions
+
+  `current_category`: Current category ID
+
+```json
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "",
+      "answer": "",
+      "category": 1,
+      "difficulty": 1
+    }
+  ],
+  "total_questions": 1,
+  "current_category": 1
+}
+```
+
+- POST "/quizzes"
+
+  - Get a unique question for the quiz on selected category
+  - Request Body:
+
+  `previous_questions`: List of previously answered questions
+
+  `quiz_category`: Category object of the quiz
+
+  - Response Body:
+
+  `question`: Random question of requested category
+
+```json
+{
+  "question": {
+    "id": 1,
+    "question": "",
+    "answer": "",
+    "category": 1,
+    "difficulty": 1
+  }
+}
 ```
